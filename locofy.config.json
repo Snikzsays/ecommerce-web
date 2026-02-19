@@ -1,0 +1,13 @@
+{
+  "projectId": "",
+  "platform": "web",
+  "framework": "angular",
+  "sourceFolder": "public",
+  "outputFolder": "src",
+  "pages": [],
+  "components": [],
+  "settings": {
+    "exportCss": true,
+    "includeAssets": true
+  }
+}
