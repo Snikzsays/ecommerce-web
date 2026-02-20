@@ -3,14 +3,17 @@
   "platform": "web",
   "framework": "angular",
   "sourceFolder": "public",
-  "outputFolder": "src",
+  "outputFolder": "src/app",
   "pages": [
     {
       "name": "Home",
-      "path": "src/app/pageshome/home.component.html"
+      "path": "pages/home/home.component.html"
     }
   ],
-  "components": [],
+  "components": [{
+    "name": "Header",
+    "path": "components/header/header.component.html"
+  }],
   "settings": {
     "exportCss": true,
     "includeAssets": true
