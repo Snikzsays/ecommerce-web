@@ -5,12 +5,10 @@
   "sourceFolder": "public",
   "outputFolder": "src/app",
   "pages": [
-      "./src/app/pages/home/home.component.html",
-      "./src/app/pages/home/home.component.ts"   
+      "./src/app/pages/home/home.component.html"  
   ],
   "components": [
-    "./src/app/components/header/header.component.html",
-    "./src/app/components/header/header.component.ts"  
+    "./src/app/components/header/header.component.html" 
   ],
   "settings": {
     "exportCss": true,
