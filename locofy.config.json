@@ -5,15 +5,13 @@
   "sourceFolder": "public",
   "outputFolder": "src/app",
   "pages": [
-    {
-      "name": "Home",
-      "path": "pages/home/home.component.html"
-    }
+      "./src/app/pages/home/home.component.html",
+      "./src/app/pages/home/home.component.ts"   
   ],
-  "components": [{
-    "name": "Header",
-    "path": "components/header/header.component.html"
-  }],
+  "components": [
+    "./src/app/components/header/header.component.html",
+    "./src/app/components/header/header.component.ts"  
+  ],
   "settings": {
     "exportCss": true,
     "includeAssets": true
