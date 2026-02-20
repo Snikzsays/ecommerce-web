@@ -1,6 +1,6 @@
 {
   "components": [
-    "./src/app/components/header/header.component.html",
-    "./src/app/pages/home/home.component.html"  
+    "./components/header/header.component.html",
+    "./pages/home/home.component.html"  
   ]
 }
