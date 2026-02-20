@@ -1,17 +1,6 @@
 {
-  "projectId": "",
-  "platform": "web",
-  "framework": "angular",
-  "sourceFolder": "public",
-  "outputFolder": "src/app",
-  "pages": [
-      "./src/app/pages/home/home.component.html"  
-  ],
   "components": [
-    "./src/app/components/header/header.component.html" 
-  ],
-  "settings": {
-    "exportCss": true,
-    "includeAssets": true
-  }
+    "./src/app/components/header/header.component.html",
+    "./src/app/pages/home/home.component.html"  
+  ]
 }
