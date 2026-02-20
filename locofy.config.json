@@ -4,7 +4,12 @@
   "framework": "angular",
   "sourceFolder": "public",
   "outputFolder": "src",
-  "pages": [],
+  "pages": [
+    {
+      "name": "Home",
+      "path": "src/app/pageshome/home.component.html"
+    }
+  ],
   "components": [],
   "settings": {
     "exportCss": true,
