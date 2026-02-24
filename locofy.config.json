@@ -1,6 +1,0 @@
-{
-  "components": [
-    "./components/header/header.component.html",
-    "./pages/home/home.component.html"  
-  ]
-}

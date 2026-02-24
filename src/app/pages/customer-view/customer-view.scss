@@ -1,0 +1,26 @@
+// Color variables
+$text-primary: #333;
+$text-secondary: #666;
+
+// Spacing
+$spacing-2xl: 2rem;
+$spacing-1: 1rem;
+
+.customer-view {
+  padding: $spacing-2xl;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  h1 {
+    color: $text-primary;
+    font-size: 2rem;
+    margin-bottom: $spacing-1;
+    font-weight: 600;
+  }
+
+  p {
+    color: $text-secondary;
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+}

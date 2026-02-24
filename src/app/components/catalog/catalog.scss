@@ -1,0 +1,104 @@
+// Catalog Component Styles
+
+// Hide scrollbars for horizontal scroll containers
+.scrollbar-hide {
+  -ms-overflow-style: none; // IE and Edge
+  scrollbar-width: none; // Firefox
+
+  &::-webkit-scrollbar {
+    display: none; // Chrome, Safari and Opera
+  }
+}
+
+// Smooth scroll behavior
+.scroll-smooth {
+  scroll-behavior: smooth;
+}
+
+// Hover effect for category cards
+.category-card {
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+}
+
+// Product grid responsiveness
+@media (min-width: 640px) {
+  .category-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .category-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+// Scroll button styles
+.scroll-button {
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: rgba(249, 250, 251, 1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+// Product card container
+.product-scroll-container {
+  overflow: -moz-scrollbars-none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+// Sticky header
+.sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  backdrop-filter: blur(4px);
+}
+
+// Badge styles
+.product-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+
+  &.popular {
+    background-color: #fbbf24;
+    color: #1f2937;
+  }
+
+  &.best-seller {
+    background-color: #ef4444;
+    color: white;
+  }
+}
+
+// Discount overlay
+.discount-badge {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  background-color: #ef4444;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+}

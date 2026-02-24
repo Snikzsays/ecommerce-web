@@ -1,0 +1,20 @@
+<div class="min-h-screen bg-gradient-to-b from-orange-50 to-amber-50">
+  <!-- Reusable Store Header Component -->
+  <app-store-header
+    [storeName]="storeName"
+    [storeTagline]="storeTagline"
+    [searchPlaceholder]="'Search teas... (चाय खोजें)'"
+    [categories]="categories"
+    [searchQuery]="searchQuery"
+    [selectedCategory]="selectedCategory"
+    [showFilters]="showFilters"
+    (searchQueryChange)="searchQuery = $event"
+    (selectedCategoryChange)="selectedCategory = $event"
+    (showFiltersChange)="showFilters = $event"
+  ></app-store-header>
+
+  <!-- Customer View Content -->
+  <div class="p-4 m-4 bg-red-600 text-white rounded-xl">
+    Tailwind is working 🎉
+  </div>
+</div>

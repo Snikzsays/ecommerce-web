@@ -1,0 +1,120 @@
+// Product card specific styles
+.product-card {
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.product-image {
+  position: relative;
+  overflow: hidden;
+
+  &:hover img {
+    transform: scale(1.05);
+  }
+}
+
+.product-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  z-index: 10;
+
+  &.popular {
+    background-color: #fbbf24;
+    color: #1f2937;
+  }
+
+  &.best-seller {
+    background-color: #ef4444;
+    color: white;
+  }
+}
+
+.discount-badge {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  background-color: #ef4444;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  z-index: 10;
+}
+
+.cart-controls {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+
+  button {
+    padding: 4px 8px;
+    border: none;
+    background-color: #f3f4f6;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: #e5e7eb;
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+}
+
+.bulk-order-dropdown {
+  position: relative;
+
+  &:hover > .dropdown-menu {
+    display: block;
+  }
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  min-width: 150px;
+  z-index: 50;
+
+  button {
+    width: 100%;
+    padding: 8px 12px;
+    border: none;
+    background: none;
+    text-align: left;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: #f3f4f6;
+    }
+
+    &:first-child {
+      border-radius: 8px 8px 0 0;
+    }
+
+    &:last-child {
+      border-radius: 0 0 8px 8px;
+    }
+  }
+}
+
