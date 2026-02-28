@@ -13,5 +13,9 @@
   ],
   "exclude": [
     "src/**/*.spec.ts"
+  ],
+   "include": [
+    "src/main.ts",
+    "src/app/**/*.ts"
   ]
 }

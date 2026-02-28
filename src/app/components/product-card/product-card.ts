@@ -62,4 +62,9 @@ export class ProductCardComponent {
   closeBulkDropdown(): void {
     this.bulkDropdownOpen = false;
   }
+
+  onImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    img.src = 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=400&h=300&fit=crop&auto=format';
+  }
 }

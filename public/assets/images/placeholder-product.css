@@ -1,0 +1,31 @@
+/* This is a placeholder image for Assam Premium CTC Tea */
+/* In production, replace this with an actual image from your FigJam design */
+
+.assam-ctc-placeholder {
+    background: linear-gradient(135deg, #8B4513 0%, #D2691E 50%, #CD853F 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    text-align: center;
+    font-size: 14px;
+    width: 100%;
+    height: 144px; /* h-36 equivalent */
+    position: relative;
+}
+
+.assam-ctc-placeholder::before {
+    content: "🍵";
+    font-size: 24px;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.assam-ctc-placeholder::after {
+    content: "Assam Premium CTC\AUpload your FigJam image";
+    white-space: pre;
+    font-size: 12px;
+    line-height: 1.3;
+}

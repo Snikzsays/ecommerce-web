@@ -15,6 +15,9 @@ export interface Product {
   subCategory: string;
   variants: ProductVariant[];
   badge?: 'Popular' | 'Best Seller' | 'Fresh Stock';
+  image?: string;
+  gallery?: string[];
+  thumbnail?: string;
 }
 
 export interface CartItem {
@@ -29,6 +32,9 @@ export interface Category {
   name: string;
   icon: string;
   subCategories: string[];
+  image?: string;
+  bannerImage?: string;
+  thumbnail?: string;
 }
 
 export interface NavigationStructure {

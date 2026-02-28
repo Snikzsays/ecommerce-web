@@ -43,6 +43,8 @@ export class ProductsService {
       category: 'tea',
       subCategory: 'Black Tea (CTC)',
       badge: 'Best Seller',
+      image: 'https://images.unsplash.com/photo-1597318801175-41fda44ddc9b?w=400&h=300&fit=crop&auto=format',
+      thumbnail: 'https://images.unsplash.com/photo-1597318801175-41fda44ddc9b?w=200&h=150&fit=crop&auto=format',
       variants: [
         { size: '250g', mrp: 450, discountedPrice: 375, bulkPrice: 300, bulkMinQty: 20 },
       ],
@@ -54,6 +56,8 @@ export class ProductsService {
       category: 'tea',
       subCategory: 'Green Tea',
       badge: 'Popular',
+      image: 'https://images.unsplash.com/photo-1627435601361-ec25f5b1d0e5?w=400&h=300&fit=crop&auto=format',
+      thumbnail: 'https://images.unsplash.com/photo-1627435601361-ec25f5b1d0e5?w=200&h=150&fit=crop&auto=format',
       variants: [
         { size: '200g', mrp: 350, discountedPrice: 280 },
       ],
@@ -64,6 +68,8 @@ export class ProductsService {
       nameHindi: 'हर्बल कैमोमाइल',
       category: 'tea',
       subCategory: 'Herbal Tea',
+      image: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&h=300&fit=crop&auto=format',
+      thumbnail: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=200&h=150&fit=crop&auto=format',
       variants: [
         { size: '150g', mrp: 300, discountedPrice: 240 },
       ],
@@ -75,6 +81,8 @@ export class ProductsService {
       category: 'tea',
       subCategory: 'Black Tea (CTC)',
       badge: 'Fresh Stock',
+      image: 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=400&h=300&fit=crop&auto=format',
+      thumbnail: 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=200&h=150&fit=crop&auto=format',
       variants: [
         { size: '100g', mrp: 500, discountedPrice: 400 },
       ],
@@ -85,6 +93,8 @@ export class ProductsService {
       nameHindi: 'कश्मीरी कहवा',
       category: 'tea',
       subCategory: 'Herbal Tea',
+      image: 'https://images.unsplash.com/photo-1571934811356-5cc061b6821f?w=400&h=300&fit=crop&auto=format',
+      thumbnail: 'https://images.unsplash.com/photo-1571934811356-5cc061b6821f?w=200&h=150&fit=crop&auto=format',
       variants: [
         { size: '100g', mrp: 450, discountedPrice: 375 },
       ],

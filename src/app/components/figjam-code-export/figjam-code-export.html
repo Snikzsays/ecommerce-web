@@ -1,0 +1,165 @@
+<div class="figjam-code-export bg-gray-50 min-h-screen p-4">
+  <!-- Header -->
+  <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
+    <div class="text-center">
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">⚡ FigJam to Source Code</h1>
+      <p class="text-gray-600">Convert your FigJam designs into usable code for development</p>
+    </div>
+  </div>
+
+  <!-- FigJam URL Input -->
+  <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
+    <h2 class="text-xl font-bold text-gray-900 mb-4">Enter Your FigJam URL</h2>
+    <div class="flex gap-3 mb-4">
+      <input
+        type="url"
+        [(ngModel)]="figJamUrl"
+        placeholder="https://www.figma.com/make/your-figjam-file-id"
+        class="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+      >
+      <select 
+        [(ngModel)]="selectedFramework"
+        class="px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+      >
+        <option value="angular">Angular</option>
+        <option value="react">React</option>
+        <option value="vue">Vue</option>
+        <option value="html">HTML/CSS</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Export Methods -->
+  <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
+    <h2 class="text-xl font-bold text-gray-900 mb-6">Choose Export Method</h2>
+    
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      @for (method of exportMethods; track method.id) {
+        <div 
+          (click)="onMethodSelect(method.id)"
+          [class]="exportMethod === method.id ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-blue-300'"
+          class="border-2 rounded-xl p-4 cursor-pointer transition-all"
+        >
+          <div class="flex items-center gap-3 mb-3">
+            <mat-icon [class]="exportMethod === method.id ? 'text-blue-600' : 'text-gray-500'">{{ method.icon }}</mat-icon>
+            <div>
+              <h3 class="font-semibold text-gray-900">{{ method.name }}</h3>
+              @if (method.recommended) {
+                <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">Recommended</span>
+              }
+            </div>
+          </div>
+          <p class="text-sm text-gray-600 mb-2">{{ method.description }}</p>
+          <div class="flex items-center justify-between">
+            <span class="text-xs text-blue-600 font-medium">{{ method.difficulty }}</span>
+            @if (exportMethod === method.id) {
+              <mat-icon class="text-blue-600 text-sm">check_circle</mat-icon>
+            }
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Method-specific Tools -->
+    @if (exportMethod === 'plugin') {
+      <div class="bg-blue-50 rounded-xl p-4 mb-4">
+        <h3 class="font-semibold text-blue-900 mb-3">🔌 Recommended Figma Plugins</h3>
+        <div class="space-y-2">
+          @for (tool of getSelectedMethodTools(); track tool.name) {
+            <div class="flex items-center justify-between bg-white rounded-lg p-3">
+              <div>
+                <h4 class="font-medium text-gray-900">{{ tool.name }}</h4>
+                <p class="text-sm text-gray-600">{{ tool.type }}</p>
+              </div>
+              <button 
+                (click)="openPluginUrl(tool.url)"
+                class="bg-blue-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-blue-700 transition-colors"
+              >
+                Install Plugin
+              </button>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <button 
+      (click)="extractFromFigJam()"
+      [disabled]="!figJamUrl.trim() || isProcessing"
+      class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold py-3 px-6 rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      @if (isProcessing) {
+        <span class="flex items-center justify-center gap-2">
+          <mat-icon class="animate-spin">sync</mat-icon>
+          Processing...
+        </span>
+      } @else {
+        <span class="flex items-center justify-center gap-2">
+          <mat-icon>code</mat-icon>
+          Generate {{ selectedFramework.toUpperCase() }} Code
+        </span>
+      }
+    </button>
+  </div>
+
+  <!-- Export Results -->
+  @if (exportResults.length > 0) {
+    <div class="bg-white rounded-2xl shadow-lg p-6">
+      <h2 class="text-xl font-bold text-gray-900 mb-4">📦 Generated Code</h2>
+      
+      <mat-tab-group class="export-tabs">
+        @for (result of exportResults; track result.filename) {
+          <mat-tab [label]="result.filename">
+            <div class="pt-4">
+              <div class="flex items-center justify-between mb-4">
+                <div>
+                  <h3 class="font-semibold text-gray-900">{{ result.filename }}</h3>
+                  <p class="text-sm text-gray-600">{{ result.description }}</p>
+                </div>
+                <div class="flex gap-2">
+                  <button 
+                    (click)="copyToClipboard(result.content)"
+                    class="bg-gray-600 text-white px-3 py-2 rounded-lg text-sm hover:bg-gray-700 transition-colors"
+                  >
+                    <mat-icon class="mr-1 text-sm">content_copy</mat-icon>
+                    Copy
+                  </button>
+                  <button 
+                    (click)="downloadExport(result)"
+                    class="bg-blue-600 text-white px-3 py-2 rounded-lg text-sm hover:bg-blue-700 transition-colors"
+                  >
+                    <mat-icon class="mr-1 text-sm">download</mat-icon>
+                    Download
+                  </button>
+                </div>
+              </div>
+              
+              <div class="bg-gray-900 text-green-400 rounded-xl p-4 overflow-auto">
+                <pre class="text-sm font-mono whitespace-pre-wrap">{{ result.content }}</pre>
+              </div>
+            </div>
+          </mat-tab>
+        }
+      </mat-tab-group>
+    </div>
+  }
+
+  <!-- Quick Start Guide -->
+  <div class="bg-gradient-to-br from-orange-400 via-red-400 to-pink-400 rounded-2xl shadow-lg p-6 mt-6 text-white">
+    <h2 class="text-xl font-bold mb-4">🚀 Quick Start Guide</h2>
+    <div class="grid md:grid-cols-3 gap-4">
+      <div class="quick-start-card bg-white/10 rounded-xl p-4">
+        <h3 class="font-semibold mb-2">🎨 Best for Design Systems</h3>
+        <p class="text-sm opacity-90">Use plugins like "Design Tokens" to extract colors, spacing, and typography from your FigJam design.</p>
+      </div>
+      <div class="quick-start-card bg-white/10 rounded-xl p-4">
+        <h3 class="font-semibold mb-2">⚡ Fastest Method</h3>
+        <p class="text-sm opacity-90">Manual extraction + our code generator. Copy your design assets and use our templates.</p>
+      </div>
+      <div class="quick-start-card bg-white/10 rounded-xl p-4">
+        <h3 class="font-semibold mb-2">🔧 Most Accurate</h3>
+        <p class="text-sm opacity-90">Figma plugins like "Locofy" can generate production-ready Angular components.</p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,7 +1,7 @@
 <div class="flex-shrink-0 w-44 bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all border border-gray-100">
   <!-- Product Image -->
   <div (click)="onProductImageClick()" class="relative cursor-pointer">
-    <img [src]="imageUrl" [alt]="product.name" class="w-full h-36 object-cover" />
+    <img [src]="imageUrl" [alt]="product.name" class="w-full h-36 object-cover" (error)="onImageError($event)" />
 
     <!-- Badge -->
     @if (product.badge) {

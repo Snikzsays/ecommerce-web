@@ -1,0 +1,49 @@
+{
+  "ONBOARDING": {
+    "STORE_NAME": {
+      "TITLE": "स्टोर की जानकारी",
+      "SUBTITLE": "आप अपने स्टोर को क्या नाम देना चाहेंगे?",
+      "PLACEHOLDER": "उदा., वीयू का कैफे, द कॉफी कॉर्नर...",
+      "HINT": "अपने स्टोर के लिए एक यादगार नाम चुनें (2-50 अक्षर)"
+    },
+    "STORE_DESCRIPTION": {
+      "TITLE": "स्टोर का विवरण",
+      "SUBTITLE": "ग्राहकों को बताएं कि आपका स्टोर क्या खास है"
+    },
+    "CATEGORY_SELECTION": {
+      "TITLE": "आप क्या बेचते हैं?",
+      "SUBTITLE": "अपने स्टोर के लिए उपयुक्त सभी उत्पाद श्रेणियों का चयन करें"
+    },
+    "LANGUAGE_PREFERENCE": {
+      "TITLE": "पसंदीदा भाषा",
+      "SUBTITLE": "अपने स्टोर के लिए भाषाएं चुनें (आप दोनों चुन सकते हैं)",
+      "SELECTED": "चयनित",
+      "COMPLETE_SETUP": "सेटअप पूरा करें"
+    },
+    "NAVIGATION": {
+      "PREVIOUS": "पिछला",
+      "CONTINUE": "जारी रखें",
+      "NEXT": "अगला"
+    }
+  },
+  "CATEGORIES": {
+    "GROCERIES": "किराना",
+    "ELECTRONICS": "इलेक्ट्रॉनिक्स",
+    "FASHION": "फैशन",
+    "FOOD_DINING": "खाना और भोजन",
+    "HEALTH_WELLNESS": "स्वास्थ्य और कल्याण",
+    "SPORTS_FITNESS": "खेल और फिटनेस",
+    "HOME_GARDEN": "घर और बगीचा",
+    "BOOKS_EDUCATION": "किताबें और शिक्षा",
+    "TOYS_GAMES": "खिलौने और खेल",
+    "BEAUTY_PERSONAL_CARE": "सौंदर्य और व्यक्तिगत देखभाल",
+    "GIFTS_ACCESSORIES": "उपहार और सहायक उपकरण",
+    "OTHERS": "अन्य"
+  },
+  "LANGUAGES": {
+    "HI": "हिंदी",
+    "EN": "English",
+    "HI_SUPPORT": "हिंदी भाषा समर्थन",
+    "EN_SUPPORT": "अंग्रेजी भाषा समर्थन"
+  }
+}

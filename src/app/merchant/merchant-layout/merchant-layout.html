@@ -1,0 +1,70 @@
+<div class="min-h-screen bg-gray-50 flex">
+  <!-- Sidebar -->
+  <aside class="hidden md:flex w-64 flex-col border-r bg-white">
+    <div class="px-5 py-4 border-b">
+      <div class="text-lg font-extrabold text-gray-900">Merchant</div>
+      <div class="text-xs text-gray-500">VU’s Brew House</div>
+    </div>
+
+    <nav class="p-3 space-y-1">
+      <a
+        routerLink="/merchant/dashboard"
+        routerLinkActive="bg-orange-50 text-orange-700"
+        class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-semibold text-gray-700 hover:bg-gray-50"
+      >
+        <span>📊</span> Dashboard
+      </a>
+
+      <a
+        routerLink="/merchant/orders"
+        routerLinkActive="bg-orange-50 text-orange-700"
+        class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-semibold text-gray-700 hover:bg-gray-50"
+      >
+        <span>🧾</span> Orders
+      </a>
+
+      <a
+        routerLink="/merchant/products"
+        routerLinkActive="bg-orange-50 text-orange-700"
+        class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-semibold text-gray-700 hover:bg-gray-50"
+      >
+        <span>📦</span> Products
+      </a>
+    </nav>
+
+    <div class="mt-auto p-3 border-t">
+      <button class="w-full rounded-xl bg-gray-900 text-white py-2 text-sm font-bold hover:bg-black">
+        Logout
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="flex-1">
+    <!-- Topbar -->
+    <header class="sticky top-0 z-30 bg-white/90 backdrop-blur border-b">
+      <div class="px-4 md:px-6 py-3 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="md:hidden text-xl">☰</div>
+          <div>
+            <div class="text-sm font-extrabold text-gray-900">VU’s Brew House</div>
+            <div class="text-xs text-gray-500">Merchant Dashboard</div>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button class="rounded-xl border px-3 py-2 text-sm font-semibold hover:bg-gray-50">
+            Settings
+          </button>
+          <button class="rounded-xl bg-orange-600 px-3 py-2 text-sm font-bold text-white hover:bg-orange-700">
+            + New Product
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="px-4 md:px-6 py-5">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

@@ -1,4 +1,4 @@
-// Catalog Component Styles
+// Catalog Component Styles - Clean Angular approach
 
 // Hide scrollbars for horizontal scroll containers
 .scrollbar-hide {
@@ -15,16 +15,69 @@
   scroll-behavior: smooth;
 }
 
-// Hover effect for category cards
+// Golden theme search input improvements
+.search-input {
+  &::placeholder {
+    color: #D97706; // amber-600
+  }
+
+  &:focus {
+    border-color: #F59E0B; // amber-500
+    box-shadow: 0 0 0 2px #F59E0B;
+  }
+}
+
+// Category card hover effects
 .category-card {
   transition: all 0.3s ease;
 
   &:hover {
     transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
   }
 }
 
-// Product grid responsiveness
+// Scroll button styling
+.scroll-button {
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #F9FAFB; // gray-50
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+// Filter button states
+.filter-button {
+  transition: all 0.3s ease;
+
+  &.active {
+    background-color: #D97706; // amber-700
+    color: white;
+    border-color: #D97706;
+  }
+
+  &.inactive {
+    background-color: white;
+    color: #D97706;
+    border-color: #F3CC45; // amber-300
+  }
+}
+
+// Product card styling improvements
+.product-card {
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+  }
+}
+
+// Responsive breakpoints
 @media (min-width: 640px) {
   .category-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -35,70 +88,4 @@
   .category-grid {
     grid-template-columns: repeat(4, 1fr);
   }
-}
-
-// Scroll button styles
-.scroll-button {
-  transition: all 0.2s ease;
-
-  &:hover {
-    background-color: rgba(249, 250, 251, 1);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-
-  &:active {
-    transform: scale(0.95);
-  }
-}
-
-// Product card container
-.product-scroll-container {
-  overflow: -moz-scrollbars-none;
-  -ms-overflow-style: none;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
-}
-
-// Sticky header
-.sticky-header {
-  position: sticky;
-  top: 0;
-  z-index: 40;
-  backdrop-filter: blur(4px);
-}
-
-// Badge styles
-.product-badge {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: 600;
-
-  &.popular {
-    background-color: #fbbf24;
-    color: #1f2937;
-  }
-
-  &.best-seller {
-    background-color: #ef4444;
-    color: white;
-  }
-}
-
-// Discount overlay
-.discount-badge {
-  position: absolute;
-  bottom: 8px;
-  left: 8px;
-  background-color: #ef4444;
-  color: white;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: 600;
 }

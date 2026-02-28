@@ -1,242 +1,280 @@
-<!-- HOME VIEW -->
-@if (currentView === 'home') {
-  <div class="min-h-screen bg-gray-50">
+<!-- CATEGORIES VIEW -->
+@if (currentView === 'categories') {
+  <div class="bg-gray-50 min-h-full flex flex-col">
     <!-- Header -->
-    <div class="bg-gradient-to-r from-orange-600 to-red-600 text-white sticky top-0 z-40 shadow-lg">
+    <div class="flex-shrink-0 sticky top-0 z-50 bg-gradient-to-r from-orange-400 via-yellow-400 to-yellow-300 shadow-md">
       <div class="px-4 py-4">
-        <!-- Branding -->
-        <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center justify-between mb-4">
           <div>
-            <h1 class="text-xl font-bold">{{ storeName }}</h1>
-            <p class="text-xs text-orange-100">{{ storeTagline }}</p>
+            <h1 class="text-xl font-bold text-gray-900">{{ storeName }}</h1>
+            <p class="text-sm text-amber-800">{{ storeTagline }}</p>
           </div>
+          <!-- Cart Icon -->
           <button
             (click)="handleCartClick()"
-            class="relative bg-white text-orange-600 p-3 rounded-full shadow-lg hover:shadow-xl transition-all"
+            class="relative bg-white rounded-full p-3 shadow-lg hover:shadow-xl transition-all"
           >
-            <mat-icon>shopping_cart</mat-icon>
+            <mat-icon class="text-orange-600">shopping_cart</mat-icon>
             @if (getTotalCartItems() > 0) {
-              <span
-                class="absolute -top-1 -right-1 bg-green-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center"
-              >
+              <span class="absolute -top-1 -right-1 bg-green-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
                 {{ getTotalCartItems() }}
               </span>
             }
           </button>
         </div>
 
-        <!-- Search Bar -->
-        <div class="relative">
-          <mat-icon class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">search</mat-icon>
-          <input
-            type="text"
-            placeholder="Search products..."
-            [(ngModel)]="searchQuery"
-            class="w-full pl-10 pr-4 py-2.5 rounded-xl text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-white"
-          />
+        <!-- Search Bar with Filter -->
+        <div class="flex gap-3">
+          <div class="relative flex-1">
+            <mat-icon class="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-orange-600">search</mat-icon>
+            <input
+              type="text"
+              placeholder="Search products..."
+              [value]="searchQuery"
+              (input)="onSearchChange($any($event.target).value)"
+              class="w-full pl-12 pr-4 py-3 rounded-2xl bg-white text-gray-900 placeholder-orange-600 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 shadow-sm"
+            />
+            @if (searchQuery) {
+              <button
+                (click)="clearSearch()"
+                class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                <mat-icon class="w-4 h-4">close</mat-icon>
+              </button>
+            }
+          </div>
+          <button
+            (click)="toggleFilter()"
+            [class]="filterOpen || selectedFilter ? 'bg-orange-600 text-white' : 'bg-white text-orange-600'"
+            class="flex-shrink-0 p-3 rounded-2xl transition-all shadow-sm hover:shadow-md"
+          >
+            <mat-icon>filter_list</mat-icon>
+          </button>
         </div>
       </div>
     </div>
 
-    <!-- Category Grid -->
-    <div class="p-6">
-      <h2 class="text-xl font-bold text-gray-900 mb-4">Shop by Category</h2>
-      <div class="grid grid-cols-2 gap-4">
-        @for (category of navigationStructure.categories; track category.id) {
+    <!-- Content -->
+    <div class="flex-1 overflow-y-auto pb-20 p-4">
+      <h2 class="text-xl font-bold text-gray-900 mb-4">Browse Products</h2>
+      <div class="space-y-3">
+        @for (category of getFilteredCategories(); track category.id) {
+          @let productCount = getProductCountByCategory(category.id);
           <button
             (click)="handleCategoryClick(category.id)"
-            class="bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all border-2 border-gray-100 hover:border-orange-300 text-left"
+            class="w-full bg-white rounded-xl border-2 border-gray-200 hover:border-orange-500 hover:shadow-md transition-all overflow-hidden relative"
           >
-            <div class="text-4xl mb-3">{{ category.icon }}</div>
-            <h3 class="font-bold text-gray-900 text-lg mb-1">{{ category.name }}</h3>
-            <p class="text-xs text-gray-500">{{ getProductCountByCategory(category.id) }} products</p>
-            <div class="flex items-center justify-between mt-3">
-              <span class="text-xs text-orange-600 font-semibold">Browse →</span>
+            <!-- Background Image -->
+            <div 
+              class="absolute inset-0 bg-cover bg-center opacity-10"
+              [style.background-image]="'url(' + getCategoryImageUrl(category.id) + ')'"
+              (error)="onCategoryImageError($event)"
+            ></div>
+            
+            <!-- Content -->
+            <div class="relative z-10 p-4">
+              <div class="flex items-center gap-4">
+                <div class="flex-shrink-0">
+                  <!-- Emoji icon as primary, with optional image thumbnail -->
+                  <div class="text-4xl">{{ category.icon }}</div>
+                </div>
+                <div class="flex-1 text-left">
+                  <h3 class="text-lg font-bold text-gray-900">{{ category.name }}</h3>
+                  <p class="text-sm text-gray-600">{{ productCount }} products</p>
+                </div>
+                <mat-icon class="w-6 h-6 text-gray-400">chevron_right</mat-icon>
+              </div>
             </div>
           </button>
-        }
-      </div>
-    </div>
-
-    <!-- Popular Products Preview -->
-    <div class="px-6 py-4 bg-white">
-      <div class="flex items-center justify-between mb-4">
-        <h2 class="text-lg font-bold text-gray-900">Popular Products</h2>
-        <button class="text-sm text-orange-600 font-semibold">See All →</button>
-      </div>
-      <div class="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
-        @for (product of getPopularProducts(); track product.id) {
-          <div
-            (click)="handleProductClick(product.id)"
-            class="flex-shrink-0 w-36 bg-gray-50 rounded-xl p-3 cursor-pointer hover:shadow-md transition-all"
-          >
-            <img
-              [src]="getProductImage(product)"
-              [alt]="product.name"
-              class="w-full h-24 object-cover rounded-lg mb-2"
-            />
-            <h3 class="text-xs font-semibold text-gray-900 line-clamp-2 mb-1">{{ product.name }}</h3>
-            <p class="text-sm font-bold text-orange-600">₹{{ product.variants[0].discountedPrice }}</p>
-          </div>
         }
       </div>
     </div>
   </div>
 }
 
-<!-- CATEGORY VIEW -->
-@if (currentView === 'category') {
-  <div class="min-h-screen bg-gray-50">
+<!-- PRODUCTS VIEW -->
+@if (currentView === 'products') {
+  <div class="bg-gray-50 min-h-full flex flex-col">
     <!-- Header -->
-    <div class="bg-gradient-to-r from-orange-600 to-red-600 text-white sticky top-0 z-40 shadow-lg">
+    <div class="flex-shrink-0 sticky top-0 z-50 bg-gradient-to-r from-orange-400 via-yellow-400 to-yellow-300 shadow-md">
       <div class="px-4 py-4">
-        <!-- Branding with Back Button -->
-        <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center justify-between mb-4">
           <div class="flex items-center gap-3">
             <button
-              (click)="handleHomeClick()"
-              class="p-2 hover:bg-white/10 rounded-lg transition-colors"
+              (click)="handleBack()"
+              class="w-9 h-9 flex items-center justify-center bg-white/20 hover:bg-white/30 rounded-full transition-colors"
             >
-              <mat-icon>arrow_back</mat-icon>
+              <mat-icon class="w-5 h-5 text-gray-900">arrow_back</mat-icon>
             </button>
             <div>
-              <h1 class="text-xl font-bold">{{ storeName }}</h1>
-              <p class="text-xs text-orange-100">{{ storeTagline }}</p>
+              <h1 class="text-xl font-bold text-gray-900">{{ storeName }}</h1>
+              <p class="text-sm text-amber-800">{{ storeTagline }}</p>
             </div>
           </div>
+          <!-- Cart Icon -->
           <button
             (click)="handleCartClick()"
-            class="relative bg-white text-orange-600 p-3 rounded-full shadow-lg hover:shadow-xl transition-all"
+            class="relative bg-white rounded-full p-3 shadow-lg hover:shadow-xl transition-all"
           >
-            <mat-icon>shopping_cart</mat-icon>
+            <mat-icon class="text-orange-600">shopping_cart</mat-icon>
             @if (getTotalCartItems() > 0) {
-              <span
-                class="absolute -top-1 -right-1 bg-green-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center"
-              >
+              <span class="absolute -top-1 -right-1 bg-green-500 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
                 {{ getTotalCartItems() }}
               </span>
             }
           </button>
         </div>
 
-        <!-- Search Bar -->
-        <div class="relative">
-          <mat-icon class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">search</mat-icon>
-          <input
-            type="text"
-            placeholder="Search products..."
-            [(ngModel)]="searchQuery"
-            class="w-full pl-10 pr-4 py-2.5 rounded-xl text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-white"
-          />
+        <!-- Search Bar with Filter -->
+        <div class="flex gap-3">
+          <div class="relative flex-1">
+            <mat-icon class="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-orange-600">search</mat-icon>
+            <input
+              type="text"
+              placeholder="Search products..."
+              [value]="searchQuery"
+              (input)="onSearchChange($any($event.target).value)"
+              class="w-full pl-12 pr-4 py-3 rounded-2xl bg-white text-gray-900 placeholder-orange-600 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 shadow-sm"
+            />
+            @if (searchQuery) {
+              <button
+                (click)="clearSearch()"
+                class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                <mat-icon class="w-4 h-4">close</mat-icon>
+              </button>
+            }
+          </div>
+          <button
+            (click)="toggleFilter()"
+            [class]="filterOpen || selectedFilter ? 'bg-orange-600 text-white' : 'bg-white text-orange-600'"
+            class="flex-shrink-0 p-3 rounded-2xl transition-all shadow-sm hover:shadow-md"
+          >
+            <mat-icon>filter_list</mat-icon>
+          </button>
         </div>
       </div>
     </div>
 
-    <!-- Category Sections with Horizontal Scroll -->
-    <div class="pb-6">
-      @for (category of navigationStructure.categories; track category.id) {
-        @if (category.id === selectedCategory) {
-          @for (subCategory of category.subCategories; track subCategory) {
-            @let subCatProducts = getProductsForSubCategory(category.id, subCategory);
-            @if (subCatProducts.length > 0) {
-              <div class="mb-8">
-                <!-- Section Header -->
-                <div class="px-4 pt-6 pb-3 flex items-center justify-between">
-                  <div class="flex items-center gap-2">
-                    <span class="text-2xl">{{ category.icon }}</span>
-                    <div>
-                      <h2 class="text-lg font-bold text-gray-900">
-                        {{ subCategory === 'All' ? category.name : subCategory }}
-                      </h2>
-                      <p class="text-xs text-gray-500">
-                        {{ subCatProducts.length }} items
-                      </p>
-                    </div>
-                  </div>
-                  @if (subCatProducts.length > 6) {
-                    <button class="text-sm font-semibold text-orange-600 flex items-center gap-1">
-                      See All
-                      <mat-icon>chevron_right</mat-icon>
-                    </button>
-                  }
-                </div>
-
-                <!-- Sub-category Filters -->
-                @if (subCategory === 'All' && category.subCategories.length > 2) {
-                  <div class="px-4 mb-3">
-                    <div class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-                      @for (sub of category.subCategories; track sub) {
-                        <button
-                          (click)="selectedSubCategory = sub"
-                          [ngClass]="{
-                            'bg-orange-600 text-white': selectedSubCategory === sub,
-                            'bg-white text-gray-700 border border-gray-300': selectedSubCategory !== sub,
-                          }"
-                          class="px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition-all"
-                        >
-                          {{ sub }}
-                        </button>
-                      }
-                    </div>
-                  </div>
-                }
-
-                <!-- Horizontal Scroll Container -->
-                <div class="relative">
-                  <!-- Scroll Left Button -->
-                  @if (subCatProducts.length > 6) {
-                    <button
-                      (click)="scrollLeft(subCategory)"
-                      class="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg rounded-full p-2 hover:bg-gray-50 transition-all"
-                    >
-                      <mat-icon class="text-gray-700">chevron_left</mat-icon>
-                    </button>
-                  }
-
-                  <!-- Products Container -->
-                  <div
-                    #scrollContainer
-                    [attr.data-category]="subCategory"
-                    (afterViewInit)="setScrollRef(subCategory, scrollContainer)"
-                    class="flex gap-3 overflow-x-auto px-4 pb-2 scroll-smooth"
-                    [style.scrollbar-width]="'none'"
-                    [style.ms-overflow-style]="'none'"
-                  >
-                    @for (product of subCatProducts; track product.id) {
-                      <app-product-card
-                        [product]="product"
-                        [cartQuantity]="getCartQuantity(product.id, 0)"
-                        (addToCart)="handleAddToCart($event)"
-                        (removeFromCart)="handleRemoveFromCart($event)"
-                      ></app-product-card>
-                    }
-                  </div>
-
-                  <!-- Scroll Right Button -->
-                  @if (subCatProducts.length > 6) {
-                    <button
-                      (click)="scrollRight(subCategory)"
-                      class="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg rounded-full p-2 hover:bg-gray-50 transition-all"
-                    >
-                      <mat-icon class="text-gray-700">chevron_right</mat-icon>
-                    </button>
-                  }
-                </div>
-              </div>
+    <!-- Content -->
+    <div class="flex-1 overflow-y-auto pb-20 p-4">
+      <div class="mb-4">
+        <h2 class="text-lg font-bold text-gray-900">
+          {{ getCurrentCategory()?.name || 'All Products' }}
+        </h2>
+        <p class="text-sm text-gray-600 mb-3">{{ getFilteredProducts().length }} products</p>
+        
+        <!-- Sub-Category Filters -->
+        @if (getCurrentCategory() && getCurrentCategory()!.subCategories.length > 0) {
+          <div class="flex gap-2 overflow-x-auto pb-2">
+            <button
+              (click)="selectedSubCategoryFilter = 'All'"
+              [class]="selectedSubCategoryFilter === 'All' 
+                ? 'bg-orange-600 text-white shadow-sm' 
+                : 'bg-white text-gray-700 border border-gray-300 hover:border-orange-400'"
+              class="px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition-all"
+            >
+              All
+            </button>
+            @for (subCat of getCurrentCategory()!.subCategories; track subCat) {
+              @let count = getProductsBySubCategory(selectedCategory)[subCat]?.length || 0;
+              <button
+                (click)="selectedSubCategoryFilter = subCat"
+                [class]="selectedSubCategoryFilter === subCat 
+                  ? 'bg-orange-600 text-white shadow-sm' 
+                  : 'bg-white text-gray-700 border border-gray-300 hover:border-orange-400'"
+                class="px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition-all"
+              >
+                {{ subCat }} ({{ count }})
+              </button>
             }
-          }
+          </div>
         }
-      }
+      </div>
+
+      <!-- Products List -->
+      <div class="space-y-3">
+        @for (product of getFilteredProducts(); track product.id) {
+          <app-product-card
+            [product]="product"
+            [imageUrl]="getProductImageUrl(product.id)"
+            [cartQuantity]="getCartQuantity(product.id, 0)"
+            (addToCart)="handleAddToCart($event)"
+            (removeFromCart)="handleRemoveFromCart($event)"
+            (productClick)="handleProductClick(product.id)"
+          ></app-product-card>
+        }
+      </div>
     </div>
   </div>
 }
 
-<style>
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
+<!-- Floating Chat Button -->
+<button
+  (click)="toggleChat()"
+  class="fixed bottom-4 right-4 w-12 h-12 bg-black text-white rounded-full shadow-lg hover:shadow-xl transition-all z-50 flex items-center justify-center"
+>
+  @if (chatOpen) {
+    <mat-icon class="w-5 h-5">close</mat-icon>
+  } @else {
+    <mat-icon class="w-5 h-5">chat</mat-icon>
   }
-  .scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-</style>
+</button>
+
+<!-- Chat Window -->
+@if (chatOpen) {
+  <div class="fixed bottom-20 right-4 left-4 bg-white shadow-2xl rounded-2xl overflow-hidden z-50 border-2 border-black max-h-96">
+    <!-- Chat Header -->
+    <div class="bg-black px-4 py-3">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+          <mat-icon class="w-4 h-4 text-black">chat</mat-icon>
+        </div>
+        <div>
+          <h3 class="text-sm font-bold text-white">Chat Support</h3>
+          <p class="text-xs text-gray-300">We're here to help!</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat Messages -->
+    <div class="h-48 overflow-y-auto p-4 bg-gray-50 space-y-3">
+      @for (msg of chatMessages; track $index) {
+        <div class="flex" [class]="msg.sender === 'bot' ? 'justify-start' : 'justify-end'">
+          <div
+            [class]="msg.sender === 'bot' 
+              ? 'bg-white text-gray-900 shadow-sm border border-gray-200' 
+              : 'bg-black text-white'"
+            class="max-w-[80%] px-4 py-2 rounded-lg text-sm"
+          >
+            {{ msg.text }}
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Chat Input -->
+    <div class="p-3 bg-white border-t border-gray-200">
+      <div class="flex items-center gap-2">
+        <input
+          type="text"
+          [(ngModel)]="currentMessage"
+          (keydown.enter)="currentMessage.trim() && sendMessage()"
+          placeholder="Type your message..."
+          class="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
+        />
+        <button
+          (click)="sendMessage()"
+          class="w-10 h-10 bg-black text-white rounded-lg hover:bg-gray-800 transition-all flex items-center justify-center flex-shrink-0"
+        >
+          <mat-icon class="w-4 h-4">send</mat-icon>
+        </button>
+      </div>
+      <p class="text-xs text-gray-500 mt-2 text-center">
+        Press Enter to send
+      </p>
+    </div>
+  </div>
+}
+
+

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FigJam Image Extractor</title>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: #f8fafc;
+        }
+        .container {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .step {
+            background: #f1f5f9;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #3b82f6;
+        }
+        .step h3 {
+            color: #1e40af;
+            margin-top: 0;
+        }
+        .image-preview {
+            max-width: 100%;
+            border-radius: 0.5rem;
+            margin: 1rem 0;
+            border: 2px dashed #cbd5e1;
+            padding: 1rem;
+        }
+        .upload-area {
+            border: 2px dashed #cbd5e1;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .upload-area:hover {
+            border-color: #3b82f6;
+            background: #f1f5f9;
+        }
+        .code-snippet {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.875rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        .success {
+            background: #dcfce7;
+            border-color: #16a34a;
+            color: #15803d;
+        }
+        #imagePreview {
+            max-width: 400px;
+            max-height: 300px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+        }
+        .btn {
+            background: #3b82f6;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+            margin: 0.5rem;
+            transition: background 0.3s ease;
+        }
+        .btn:hover {
+            background: #2563eb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎨 Extract Your FigJam Tea Image</h1>
+            <p>Follow these steps to get your beautiful tea image into the catalog</p>
+        </div>
+
+        <div class="step">
+            <h3>Step 1: Right-click on your FigJam tea image</h3>
+            <p>In your FigJam design, right-click on the tea leaves + cup image and select <strong>"Copy"</strong> or <strong>"Export Image"</strong></p>
+        </div>
+
+        <div class="step">
+            <h3>Step 2: Save the image</h3>
+            <p>Save it as: <code>ctc-tea-silver.jpg</code></p>
+        </div>
+
+        <div class="step">
+            <h3>Step 3: Upload your image here</h3>
+            <div class="upload-area" onclick="document.getElementById('imageInput').click()">
+                <p>📁 Click here to upload your FigJam tea image</p>
+                <input type="file" id="imageInput" accept="image/*" style="display: none;">
+            </div>
+            <div id="preview" style="display: none; margin-top: 1rem;">
+                <img id="imagePreview" alt="Tea image preview">
+                <div style="margin-top: 1rem;">
+                    <button class="btn" onclick="generateCode()">Generate Angular Code</button>
+                    <button class="btn" onclick="copyToClipboard()">Copy Image URL</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="step" id="codeStep" style="display: none;">
+            <h3>Step 4: Update your Angular code</h3>
+            <p>Replace this in your <code>image-assets.service.ts</code>:</p>
+            <div class="code-snippet" id="generatedCode"></div>
+            <button class="btn" onclick="copyCode()">Copy Code</button>
+        </div>
+
+        <div class="step success" id="successStep" style="display: none;">
+            <h3>✅ Success!</h3>
+            <p>Your FigJam tea image is now ready to display in your catalog!</p>
+            <p><strong>Next:</strong> Run <code>ng build</code> and check your catalog at <code>localhost:4200/tea-catalog</code></p>
+        </div>
+    </div>
+
+    <script>
+        let imageDataUrl = '';
+        
+        document.getElementById('imageInput').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imageDataUrl = e.target.result;
+                    document.getElementById('imagePreview').src = imageDataUrl;
+                    document.getElementById('preview').style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function generateCode() {
+            if (!imageDataUrl) return;
+            
+            const code = `{
+  id: 'tea-1',
+  name: 'CTC Tea - Silver (Your FigJam Design)',
+  url: '${imageDataUrl}',
+  alt: 'VU\\'s Brew House CTC Tea - Silver from FigJam design',
+  category: 'product',
+  tags: ['tea', 'ctc', 'silver', 'figjam-design']
+}`;
+            
+            document.getElementById('generatedCode').textContent = code;
+            document.getElementById('codeStep').style.display = 'block';
+            document.getElementById('successStep').style.display = 'block';
+        }
+
+        function copyCode() {
+            const code = document.getElementById('generatedCode').textContent;
+            navigator.clipboard.writeText(code);
+            alert('Code copied! Now paste it in your image-assets.service.ts file');
+        }
+
+        function copyToClipboard() {
+            navigator.clipboard.writeText(imageDataUrl);
+            alert('Image URL copied to clipboard!');
+        }
+    </script>
+</body>
+</html>

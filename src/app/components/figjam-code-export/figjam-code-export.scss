@@ -1,0 +1,227 @@
+/* FigJam Code Export Component Styles */
+
+.figjam-code-export {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  
+  /* Tab styling */
+  .export-tabs {
+    ::ng-deep {
+      .mat-mdc-tab-header {
+        background: #f8fafc;
+        border-radius: 0.75rem 0.75rem 0 0;
+      }
+      
+      .mat-mdc-tab {
+        min-width: 120px;
+        
+        &.mdc-tab--active {
+          .mdc-tab__text-label {
+            color: #2563eb;
+            font-weight: 600;
+          }
+        }
+      }
+      
+      .mat-mdc-tab-body-wrapper {
+        background: white;
+        border-radius: 0 0 0.75rem 0.75rem;
+      }
+    }
+  }
+  
+  /* Code block styling */
+  pre {
+    margin: 0;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    line-height: 1.5;
+    max-height: 400px;
+    overflow-y: auto;
+    
+    /* Syntax highlighting simulation */
+    &:has-text("@Component") {
+      color: #c678dd;
+    }
+    
+    &:has-text("export") {
+      color: #e06c75;
+    }
+    
+    &:has-text("const") {
+      color: #d19a66;
+    }
+  }
+  
+  /* Method selection cards */
+  .border-2 {
+    transition: all 0.3s ease;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+  }
+  
+  /* Plugin cards */
+  .bg-white.rounded-lg {
+    transition: all 0.2s ease;
+    
+    &:hover {
+      transform: translateX(4px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+  }
+  
+  /* Loading animation */
+  .animate-spin {
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  
+  /* Button hover effects */
+  button {
+    position: relative;
+    overflow: hidden;
+    
+    &:not(:disabled):before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+      );
+      transition: left 0.5s;
+    }
+    
+    &:not(:disabled):hover:before {
+      left: 100%;
+    }
+    
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+  
+  /* Framework selector */
+  select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    padding-right: 2.5rem;
+  }
+  
+  /* Success states */
+  .text-green-700 {
+    position: relative;
+    
+    &::before {
+      content: '✓';
+      color: #10b981;
+      font-weight: bold;
+      margin-right: 0.25rem;
+    }
+  }
+  
+  /* Code type badges */
+  .export-tabs .mat-mdc-tab .mdc-tab__text-label {
+    position: relative;
+    
+    &[data-type="angular"]::after {
+      content: 'TS';
+      background: #dd0031;
+      color: white;
+      padding: 2px 4px;
+      border-radius: 2px;
+      font-size: 10px;
+      margin-left: 4px;
+    }
+    
+    &[data-type="tokens"]::after {
+      content: 'JSON';
+      background: #8b5cf6;
+      color: white;
+      padding: 2px 4px;
+      border-radius: 2px;
+      font-size: 10px;
+      margin-left: 4px;
+    }
+    
+    &[data-type="html"]::after {
+      content: 'HTML';
+      background: #e34c26;
+      color: white;
+      padding: 2px 4px;
+      border-radius: 2px;
+      font-size: 10px;
+      margin-left: 4px;
+    }
+  }
+  
+  /* Quick start guide animations */
+  .quick-start-card {
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-4px);
+    }
+  }
+  
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .flex.gap-2 {
+      flex-direction: column;
+      gap: 0.5rem;
+      
+      button {
+        width: 100%;
+      }
+    }
+    
+    pre {
+      font-size: 12px;
+      padding: 0.75rem;
+    }
+  }
+  
+  /* Dark mode support */
+  @media (prefers-color-scheme: dark) {
+    .bg-gray-50 {
+      background-color: #111827;
+    }
+    
+    .bg-white {
+      background-color: #1f2937;
+    }
+    
+    .text-gray-900 {
+      color: #f9fafb;
+    }
+    
+    .text-gray-600 {
+      color: #d1d5db;
+    }
+    
+    .border-gray-200 {
+      border-color: #374151;
+    }
+  }
+}

@@ -1,0 +1,275 @@
+<div class="figma-integration bg-gray-50 min-h-screen p-4">
+  <!-- Header -->
+  <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
+    <div class="flex items-center gap-4 mb-4">
+      <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
+        <mat-icon class="text-white">design_services</mat-icon>
+      </div>
+      <div>
+        <h1 class="text-2xl font-bold text-gray-900">Figma AI Integration</h1>
+        <p class="text-gray-600">Sync your Figma designs with Angular catalog</p>
+      </div>
+    </div>
+    
+    <!-- Status Badge -->
+    <div class="flex items-center gap-2">
+      <div [class]="isConfigured ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'" 
+           class="px-3 py-1 rounded-full text-sm font-medium">
+        {{ isConfigured ? 'Connected' : 'Not Connected' }}
+      </div>
+      @if (lastSyncTime) {
+        <span class="text-sm text-gray-500">
+          Last sync: {{ formatDate(lastSyncTime) }}
+        </span>
+      }
+    </div>
+  </div>
+
+  <!-- Configuration Section -->
+  @if (!isConfigured) {
+    <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
+      <h2 class="text-xl font-bold text-gray-900 mb-4">
+        <mat-icon class="mr-2 text-purple-600">settings</mat-icon>
+        Configure Figma API
+      </h2>
+      
+      <div class="space-y-4">
+        <!-- API Key Input -->
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">
+            Figma API Key
+          </label>
+          <input 
+            type="password"
+            [(ngModel)]="figmaApiKey"
+            placeholder="figd_..."
+            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+          />
+          <p class="text-xs text-gray-500 mt-1">
+            Get your API key from <a href="https://www.figma.com/developers/api#authentication" target="_blank" class="text-purple-600 hover:underline">Figma Developer Settings</a>
+          </p>
+        </div>
+
+        <!-- File Key Input -->
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">
+            Figma File Key
+          </label>
+          <input 
+            type="text"
+            [(ngModel)]="figmaFileKey"
+            placeholder="Your Figma file key (from the URL)"
+            class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+          />
+          <p class="text-xs text-gray-500 mt-1">
+            Copy from your Figma file URL: figma.com/file/<strong>FILE_KEY</strong>/...
+          </p>
+        </div>
+
+        <!-- Configure Button -->
+        <button 
+          (click)="configureFigma()"
+          class="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold py-3 px-6 rounded-xl hover:from-purple-700 hover:to-pink-700 transition-all"
+        >
+          Connect to Figma
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- Sync Controls -->
+  @if (isConfigured) {
+    <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
+      <h2 class="text-xl font-bold text-gray-900 mb-4">
+        <mat-icon class="mr-2 text-blue-600">sync</mat-icon>
+        Sync Figma Data
+      </h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- Design Tokens -->
+        <button 
+          (click)="syncDesignTokens()"
+          [disabled]="isLoading"
+          class="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-6 rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all disabled:opacity-50"
+        >
+          <mat-icon class="text-3xl mb-2">palette</mat-icon>
+          <h3 class="font-bold text-lg">Design Tokens</h3>
+          <p class="text-sm opacity-90">Colors, typography, spacing</p>
+        </button>
+
+        <!-- Product Cards -->
+        <button 
+          (click)="syncProductCards()"
+          [disabled]="isLoading"
+          class="bg-gradient-to-br from-green-500 to-green-600 text-white p-6 rounded-xl hover:from-green-600 hover:to-green-700 transition-all disabled:opacity-50"
+        >
+          <mat-icon class="text-3xl mb-2">shopping_cart</mat-icon>
+          <h3 class="font-bold text-lg">Product Cards</h3>
+          <p class="text-sm opacity-90">Extract product components</p>
+        </button>
+
+        <!-- Catalog Layouts -->
+        <button 
+          (click)="syncCatalogLayouts()"
+          [disabled]="isLoading"
+          class="bg-gradient-to-br from-orange-500 to-orange-600 text-white p-6 rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all disabled:opacity-50"
+        >
+          <mat-icon class="text-3xl mb-2">view_module</mat-icon>
+          <h3 class="font-bold text-lg">Catalog Layouts</h3>
+          <p class="text-sm opacity-90">Grid and list layouts</p>
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- Status Message -->
+  @if (syncStatus) {
+    <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
+      <div class="flex items-center gap-3">
+        @if (isLoading) {
+          <div class="w-6 h-6 border-2 border-purple-600 border-t-transparent rounded-full animate-spin"></div>
+        } @else {
+          <mat-icon class="text-purple-600">info</mat-icon>
+        }
+        <span class="text-gray-800">{{ syncStatus }}</span>
+      </div>
+    </div>
+  }
+
+  <!-- Design Tokens Preview -->
+  @if (designTokens) {
+    <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-xl font-bold text-gray-900">
+          <mat-icon class="mr-2 text-green-600">check_circle</mat-icon>
+          Design Tokens
+        </h2>
+        <button 
+          (click)="applyDesignTokens()"
+          class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-all"
+        >
+          Apply to Catalog
+        </button>
+      </div>
+      
+      <!-- Color Palette -->
+      <div class="mb-6">
+        <h3 class="text-lg font-semibold text-gray-800 mb-3">Colors</h3>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="text-center">
+            <div [style.background-color]="designTokens.colors.primary" class="w-full h-16 rounded-lg shadow-inner mb-2"></div>
+            <p class="text-sm font-semibold">Primary</p>
+            <p class="text-xs text-gray-500">{{ designTokens.colors.primary }}</p>
+          </div>
+          <div class="text-center">
+            <div [style.background-color]="designTokens.colors.secondary" class="w-full h-16 rounded-lg shadow-inner mb-2"></div>
+            <p class="text-sm font-semibold">Secondary</p>
+            <p class="text-xs text-gray-500">{{ designTokens.colors.secondary }}</p>
+          </div>
+          <div class="text-center">
+            <div [style.background-color]="designTokens.colors.accent" class="w-full h-16 rounded-lg shadow-inner mb-2"></div>
+            <p class="text-sm font-semibold">Accent</p>
+            <p class="text-xs text-gray-500">{{ designTokens.colors.accent }}</p>
+          </div>
+          <div class="text-center">
+            <div [style.background-color]="designTokens.colors.text.primary" class="w-full h-16 rounded-lg shadow-inner mb-2"></div>
+            <p class="text-sm font-semibold">Text</p>
+            <p class="text-xs text-gray-500">{{ designTokens.colors.text.primary }}</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Typography -->
+      <div class="mb-6">
+        <h3 class="text-lg font-semibold text-gray-800 mb-3">Typography</h3>
+        <div class="space-y-3">
+          <div class="flex items-center justify-between py-3 border-b border-gray-100">
+            <span [style]="'font-size: ' + designTokens.typography.heading.fontSize + '; font-weight: ' + designTokens.typography.heading.fontWeight">Heading Style</span>
+            <span class="text-sm text-gray-500">{{ designTokens.typography.heading.fontSize }} / {{ designTokens.typography.heading.fontWeight }}</span>
+          </div>
+          <div class="flex items-center justify-between py-3 border-b border-gray-100">
+            <span [style]="'font-size: ' + designTokens.typography.body.fontSize + '; font-weight: ' + designTokens.typography.body.fontWeight">Body Style</span>
+            <span class="text-sm text-gray-500">{{ designTokens.typography.body.fontSize }} / {{ designTokens.typography.body.fontWeight }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Product Card Components -->
+  @if (productCardComponents.length > 0) {
+    <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
+      <h2 class="text-xl font-bold text-gray-900 mb-4">
+        <mat-icon class="mr-2 text-blue-600">shopping_cart</mat-icon>
+        Product Card Components ({{ productCardComponents.length }})
+      </h2>
+      
+      <div class="grid gap-4">
+        @for (component of productCardComponents; track component.id) {
+          <div class="border border-gray-200 rounded-xl p-4 flex items-center justify-between">
+            <div>
+              <h3 class="font-semibold text-gray-800">{{ component.name }}</h3>
+              <p class="text-sm text-gray-600">Type: {{ component.type }}</p>
+              @if (component.styles.width && component.styles.height) {
+                <p class="text-xs text-gray-500">Size: {{ component.styles.width }}×{{ component.styles.height }}</p>
+              }
+            </div>
+            <button 
+              (click)="generateAngularComponent(component)"
+              class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-all text-sm"
+            >
+              Generate Angular Component
+            </button>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- Catalog Layout Components -->
+  @if (catalogLayouts.length > 0) {
+    <div class="bg-white rounded-2xl shadow-lg p-6 mb-6">
+      <h2 class="text-xl font-bold text-gray-900 mb-4">
+        <mat-icon class="mr-2 text-orange-600">view_module</mat-icon>
+        Catalog Layouts ({{ catalogLayouts.length }})
+      </h2>
+      
+      <div class="grid gap-4">
+        @for (layout of catalogLayouts; track layout.id) {
+          <div class="border border-gray-200 rounded-xl p-4 flex items-center justify-between">
+            <div>
+              <h3 class="font-semibold text-gray-800">{{ layout.name }}</h3>
+              <p class="text-sm text-gray-600">Type: {{ layout.type }}</p>
+              @if (layout.styles.width && layout.styles.height) {
+                <p class="text-xs text-gray-500">Size: {{ layout.styles.width }}×{{ layout.styles.height }}</p>
+              }
+            </div>
+            <button 
+              (click)="generateAngularComponent(layout)"
+              class="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-all text-sm"
+            >
+              Generate Angular Layout
+            </button>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- Reset Configuration -->
+  @if (isConfigured) {
+    <div class="bg-white rounded-2xl shadow-lg p-6">
+      <h2 class="text-lg font-bold text-gray-900 mb-4">
+        <mat-icon class="mr-2 text-red-600">refresh</mat-icon>
+        Reset Configuration
+      </h2>
+      <p class="text-gray-600 mb-4">This will clear all stored Figma credentials and synced data.</p>
+      <button 
+        (click)="resetConfiguration()"
+        class="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-all"
+      >
+        Reset All Data
+      </button>
+    </div>
+  }
+</div>
