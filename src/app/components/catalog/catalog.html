@@ -24,73 +24,334 @@
         </div>
 
         <!-- Search Bar with Filter -->
-        <div class="flex gap-3">
-          <div class="relative flex-1">
-            <mat-icon class="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-orange-600">search</mat-icon>
-            <input
-              type="text"
-              placeholder="Search products..."
-              [value]="searchQuery"
-              (input)="onSearchChange($any($event.target).value)"
-              class="w-full pl-12 pr-4 py-3 rounded-2xl bg-white text-gray-900 placeholder-orange-600 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 shadow-sm"
-            />
-            @if (searchQuery) {
-              <button
-                (click)="clearSearch()"
-                class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-              >
-                <mat-icon class="w-4 h-4">close</mat-icon>
-              </button>
-            }
+        <div class="relative">
+          <div class="flex gap-3">
+            <div class="relative flex-1">
+              <mat-icon class="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-orange-600">search</mat-icon>
+              <input
+                type="text"
+                placeholder="Search products..."
+                [value]="searchQuery"
+                (input)="onSearchChange($any($event.target).value)"
+                class="w-full pl-12 pr-4 py-3 rounded-2xl bg-white text-gray-900 placeholder-orange-600 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 shadow-sm"
+              />
+              @if (searchQuery) {
+                <button
+                  (click)="clearSearch()"
+                  class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  <mat-icon class="w-4 h-4">close</mat-icon>
+                </button>
+              }
+            </div>
+            <button
+              (click)="toggleFilter()"
+              [class]="filterOpen || selectedFilter ? 'bg-orange-600 text-white' : 'bg-white text-orange-600'"
+              class="flex-shrink-0 p-3 rounded-2xl transition-all shadow-sm hover:shadow-md"
+              aria-label="Filter categories"
+            >
+              <mat-icon>filter_list</mat-icon>
+            </button>
           </div>
-          <button
-            (click)="toggleFilter()"
-            [class]="filterOpen || selectedFilter ? 'bg-orange-600 text-white' : 'bg-white text-orange-600'"
-            class="flex-shrink-0 p-3 rounded-2xl transition-all shadow-sm hover:shadow-md"
-          >
-            <mat-icon>filter_list</mat-icon>
-          </button>
+
+          @if (filterOpen) {
+            <!-- Click-outside overlay -->
+            <div
+              class="fixed inset-0 z-40"
+              (click)="clearFilter()"
+            ></div>
+
+            <!-- Filter panel -->
+            <div
+              class="absolute left-0 right-0 mt-2 z-50"
+              (click)="$event.stopPropagation()"
+            >
+              <div class="bg-white rounded-2xl shadow-xl border border-gray-200 p-3 flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  (click)="clearFilter()"
+                  [class]="!selectedFilter ? 'bg-orange-600 text-white' : 'bg-gray-100 text-gray-800'"
+                  class="px-3 py-1.5 rounded-full text-xs font-semibold hover:bg-orange-50 transition-colors"
+                >
+                  All Products
+                </button>
+                <button
+                  type="button"
+                  (click)="setFilter('tea')"
+                  [class]="selectedFilter === 'tea' ? 'bg-orange-600 text-white' : 'bg-gray-100 text-gray-800'"
+                  class="px-3 py-1.5 rounded-full text-xs font-semibold hover:bg-orange-50 transition-colors"
+                >
+                  Tea
+                </button>
+                <button
+                  type="button"
+                  (click)="setFilter('coffee')"
+                  [class]="selectedFilter === 'coffee' ? 'bg-orange-600 text-white' : 'bg-gray-100 text-gray-800'"
+                  class="px-3 py-1.5 rounded-full text-xs font-semibold hover:bg-orange-50 transition-colors"
+                >
+                  Coffee
+                </button>
+                <button
+                  type="button"
+                  (click)="setFilter('instant-mixes')"
+                  [class]="selectedFilter === 'instant-mixes' ? 'bg-orange-600 text-white' : 'bg-gray-100 text-gray-800'"
+                  class="px-3 py-1.5 rounded-full text-xs font-semibold hover:bg-orange-50 transition-colors"
+                >
+                  Instant Mixes
+                </button>
+                <button
+                  type="button"
+                  (click)="setFilter('specialty')"
+                  [class]="selectedFilter === 'specialty' ? 'bg-orange-600 text-white' : 'bg-gray-100 text-gray-800'"
+                  class="px-3 py-1.5 rounded-full text-xs font-semibold hover:bg-orange-50 transition-colors"
+                >
+                  Specialty
+                </button>
+              </div>
+            </div>
+          }
         </div>
       </div>
     </div>
 
     <!-- Content -->
     <div class="flex-1 overflow-y-auto pb-20 p-4">
-      <h2 class="text-xl font-bold text-gray-900 mb-4">Browse Products</h2>
-      <div class="space-y-3">
-        @for (category of getFilteredCategories(); track category.id) {
-          @let productCount = getProductCountByCategory(category.id);
+      <!-- Featured Tea Section -->
+      @if (!selectedFilter || selectedFilter === 'tea') {
+      <section class="mb-6">
+        <div class="flex items-baseline justify-between mb-3">
+          <div class="flex items-center gap-2">
+            <span class="text-2xl">🍵</span>
+            <h2 class="text-xl font-bold text-gray-900">Tea</h2>
+          </div>
           <button
-            (click)="handleCategoryClick(category.id)"
-            class="w-full bg-white rounded-xl border-2 border-gray-200 hover:border-orange-500 hover:shadow-md transition-all overflow-hidden relative"
+            type="button"
+            (click)="handleCategoryClick('tea')"
+            class="text-sm font-semibold text-orange-600 flex items-center gap-1 hover:text-orange-700"
           >
-            <!-- Background Image -->
-            <div 
-              class="absolute inset-0 bg-cover bg-center opacity-10"
-              [style.background-image]="'url(' + getCategoryImageUrl(category.id) + ')'"
-              (error)="onCategoryImageError($event)"
-            ></div>
-            
-            <!-- Content -->
-            <div class="relative z-10 p-4">
-              <div class="flex items-center gap-4">
-                <div class="flex-shrink-0">
-                  <!-- Emoji icon as primary, with optional image thumbnail -->
-                  <div class="text-4xl">{{ category.icon }}</div>
-                </div>
-                <div class="flex-1 text-left">
-                  <h3 class="text-lg font-bold text-gray-900">{{ category.name }}</h3>
-                  <p class="text-sm text-gray-600">{{ productCount }} products</p>
-                </div>
-                <mat-icon class="w-6 h-6 text-gray-400">chevron_right</mat-icon>
-              </div>
-            </div>
+            See All
+            <mat-icon class="w-4 h-4">chevron_right</mat-icon>
           </button>
-        }
-      </div>
+        </div>
+
+        <div class="relative">
+          <!-- Left scroll button -->
+          <button
+            type="button"
+            (click)="scrollTeaLeft()"
+            class="hidden md:flex items-center justify-center absolute -left-4 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white shadow-lg border border-gray-200 hover:bg-gray-50 z-10"
+            aria-label="Scroll tea products left"
+          >
+            <mat-icon class="text-gray-700">chevron_left</mat-icon>
+          </button>
+
+          <!-- Horizontal tea products scroller -->
+          <div
+            #teaScroller
+            class="flex gap-4 overflow-x-auto pb-2"
+          >
+            @for (product of getTeaProducts(); track product.id) {
+              <app-product-card
+                [product]="product"
+                [imageUrl]="getProductImageUrl(product.id)"
+                [cartQuantity]="getCartQuantity(product.id, 0)"
+                [bulkOptions]="bulkOptions"
+                (addToCart)="handleAddToCart($event)"
+                (removeFromCart)="handleRemoveFromCart($event)"
+                (productClick)="handleProductClick(product.id)"
+              ></app-product-card>
+            }
+          </div>
+
+          <!-- Right scroll button -->
+          <button
+            type="button"
+            (click)="scrollTeaRight()"
+            class="hidden md:flex items-center justify-center absolute -right-4 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white shadow-lg border border-gray-200 hover:bg-gray-50 z-10"
+            aria-label="Scroll tea products right"
+          >
+            <mat-icon class="text-gray-700">chevron_right</mat-icon>
+          </button>
+        </div>
+      </section>
+      }
+
+      <!-- Featured Coffee Section -->
+      @if (!selectedFilter || selectedFilter === 'coffee') {
+      <section class="mb-6">
+        <div class="flex items-baseline justify-between mb-3">
+          <div class="flex items-center gap-2">
+            <span class="text-2xl">☕</span>
+            <h2 class="text-xl font-bold text-gray-900">Coffee</h2>
+          </div>
+          <button
+            type="button"
+            (click)="handleCategoryClick('coffee')"
+            class="text-sm font-semibold text-orange-600 flex items-center gap-1 hover:text-orange-700"
+          >
+            See All
+            <mat-icon class="w-4 h-4">chevron_right</mat-icon>
+          </button>
+        </div>
+
+        <div class="relative">
+          <button
+            type="button"
+            (click)="scrollCoffeeLeft()"
+            class="hidden md:flex items-center justify-center absolute -left-4 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white shadow-lg border border-gray-200 hover:bg-gray-50 z-10"
+            aria-label="Scroll coffee products left"
+          >
+            <mat-icon class="text-gray-700">chevron_left</mat-icon>
+          </button>
+
+          <div
+            #coffeeScroller
+            class="flex gap-4 overflow-x-auto pb-2"
+          >
+            @for (product of getCoffeeProducts(); track product.id) {
+              <app-product-card
+                [product]="product"
+                [imageUrl]="getProductImageUrl(product.id)"
+                [cartQuantity]="getCartQuantity(product.id, 0)"
+                [bulkOptions]="bulkOptions"
+                (addToCart)="handleAddToCart($event)"
+                (removeFromCart)="handleRemoveFromCart($event)"
+                (productClick)="handleProductClick(product.id)"
+              ></app-product-card>
+            }
+          </div>
+
+          <button
+            type="button"
+            (click)="scrollCoffeeRight()"
+            class="hidden md:flex items-center justify-center absolute -right-4 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white shadow-lg border border-gray-200 hover:bg-gray-50 z-10"
+            aria-label="Scroll coffee products right"
+          >
+            <mat-icon class="text-gray-700">chevron_right</mat-icon>
+          </button>
+        </div>
+      </section>
+      }
+
+      <!-- Featured Instant Mixes Section -->
+      @if (!selectedFilter || selectedFilter === 'instant-mixes') {
+      <section class="mb-6">
+        <div class="flex items-baseline justify-between mb-3">
+          <div class="flex items-center gap-2">
+            <span class="text-2xl">🥤</span>
+            <h2 class="text-xl font-bold text-gray-900">Instant Mixes</h2>
+          </div>
+          <button
+            type="button"
+            (click)="handleCategoryClick('instant-mixes')"
+            class="text-sm font-semibold text-orange-600 flex items-center gap-1 hover:text-orange-700"
+          >
+            See All
+            <mat-icon class="w-4 h-4">chevron_right</mat-icon>
+          </button>
+        </div>
+
+        <div class="relative">
+          <button
+            type="button"
+            (click)="scrollInstantMixesLeft()"
+            class="hidden md:flex items-center justify-center absolute -left-4 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white shadow-lg border border-gray-200 hover:bg-gray-50 z-10"
+            aria-label="Scroll instant mixes left"
+          >
+            <mat-icon class="text-gray-700">chevron_left</mat-icon>
+          </button>
+
+          <div
+            #instantMixesScroller
+            class="flex gap-4 overflow-x-auto pb-2"
+          >
+            @for (product of getInstantMixProducts(); track product.id) {
+              <app-product-card
+                [product]="product"
+                [imageUrl]="getProductImageUrl(product.id)"
+                [cartQuantity]="getCartQuantity(product.id, 0)"
+                [bulkOptions]="bulkOptions"
+                (addToCart)="handleAddToCart($event)"
+                (removeFromCart)="handleRemoveFromCart($event)"
+                (productClick)="handleProductClick(product.id)"
+              ></app-product-card>
+            }
+          </div>
+
+          <button
+            type="button"
+            (click)="scrollInstantMixesRight()"
+            class="hidden md:flex items-center justify-center absolute -right-4 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white shadow-lg border border-gray-200 hover:bg-gray-50 z-10"
+            aria-label="Scroll instant mixes right"
+          >
+            <mat-icon class="text-gray-700">chevron_right</mat-icon>
+          </button>
+        </div>
+      </section>
+      }
+
+      <!-- Featured Specialty Section -->
+      @if (!selectedFilter || selectedFilter === 'specialty') {
+      <section class="mb-2">
+        <div class="flex items-baseline justify-between mb-3">
+          <div class="flex items-center gap-2">
+            <span class="text-2xl">⭐</span>
+            <h2 class="text-xl font-bold text-gray-900">Specialty</h2>
+          </div>
+          <button
+            type="button"
+            (click)="handleCategoryClick('specialty')"
+            class="text-sm font-semibold text-orange-600 flex items-center gap-1 hover:text-orange-700"
+          >
+            See All
+            <mat-icon class="w-4 h-4">chevron_right</mat-icon>
+          </button>
+        </div>
+
+        <div class="relative">
+          <button
+            type="button"
+            (click)="scrollSpecialtyLeft()"
+            class="hidden md:flex items-center justify-center absolute -left-4 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white shadow-lg border border-gray-200 hover:bg-gray-50 z-10"
+            aria-label="Scroll specialty products left"
+          >
+            <mat-icon class="text-gray-700">chevron_left</mat-icon>
+          </button>
+
+          <div
+            #specialtyScroller
+            class="flex gap-4 overflow-x-auto pb-2"
+          >
+            @for (product of getSpecialtyProducts(); track product.id) {
+              <app-product-card
+                [product]="product"
+                [imageUrl]="getProductImageUrl(product.id)"
+                [cartQuantity]="getCartQuantity(product.id, 0)"
+                [bulkOptions]="bulkOptions"
+                (addToCart)="handleAddToCart($event)"
+                (removeFromCart)="handleRemoveFromCart($event)"
+                (productClick)="handleProductClick(product.id)"
+              ></app-product-card>
+            }
+          </div>
+
+          <button
+            type="button"
+            (click)="scrollSpecialtyRight()"
+            class="hidden md:flex items-center justify-center absolute -right-4 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white shadow-lg border border-gray-200 hover:bg-gray-50 z-10"
+            aria-label="Scroll specialty products right"
+          >
+            <mat-icon class="text-gray-700">chevron_right</mat-icon>
+          </button>
+        </div>
+      </section>
+      }
     </div>
   </div>
 }
+
+<!-- AI Chat banner fixed at bottom for catalog only -->
+<app-ai-chat-banner></app-ai-chat-banner>
 
 <!-- PRODUCTS VIEW -->
 @if (currentView === 'products') {
@@ -192,89 +453,50 @@
         }
       </div>
 
-      <!-- Products List -->
-      <div class="space-y-3">
-        @for (product of getFilteredProducts(); track product.id) {
-          <app-product-card
-            [product]="product"
-            [imageUrl]="getProductImageUrl(product.id)"
-            [cartQuantity]="getCartQuantity(product.id, 0)"
-            (addToCart)="handleAddToCart($event)"
-            (removeFromCart)="handleRemoveFromCart($event)"
-            (productClick)="handleProductClick(product.id)"
-          ></app-product-card>
-        }
-      </div>
-    </div>
-  </div>
-}
-
-<!-- Floating Chat Button -->
-<button
-  (click)="toggleChat()"
-  class="fixed bottom-4 right-4 w-12 h-12 bg-black text-white rounded-full shadow-lg hover:shadow-xl transition-all z-50 flex items-center justify-center"
->
-  @if (chatOpen) {
-    <mat-icon class="w-5 h-5">close</mat-icon>
-  } @else {
-    <mat-icon class="w-5 h-5">chat</mat-icon>
-  }
-</button>
-
-<!-- Chat Window -->
-@if (chatOpen) {
-  <div class="fixed bottom-20 right-4 left-4 bg-white shadow-2xl rounded-2xl overflow-hidden z-50 border-2 border-black max-h-96">
-    <!-- Chat Header -->
-    <div class="bg-black px-4 py-3">
-      <div class="flex items-center gap-3">
-        <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center">
-          <mat-icon class="w-4 h-4 text-black">chat</mat-icon>
-        </div>
-        <div>
-          <h3 class="text-sm font-bold text-white">Chat Support</h3>
-          <p class="text-xs text-gray-300">We're here to help!</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Chat Messages -->
-    <div class="h-48 overflow-y-auto p-4 bg-gray-50 space-y-3">
-      @for (msg of chatMessages; track $index) {
-        <div class="flex" [class]="msg.sender === 'bot' ? 'justify-start' : 'justify-end'">
-          <div
-            [class]="msg.sender === 'bot' 
-              ? 'bg-white text-gray-900 shadow-sm border border-gray-200' 
-              : 'bg-black text-white'"
-            class="max-w-[80%] px-4 py-2 rounded-lg text-sm"
-          >
-            {{ msg.text }}
-          </div>
-        </div>
-      }
-    </div>
-
-    <!-- Chat Input -->
-    <div class="p-3 bg-white border-t border-gray-200">
-      <div class="flex items-center gap-2">
-        <input
-          type="text"
-          [(ngModel)]="currentMessage"
-          (keydown.enter)="currentMessage.trim() && sendMessage()"
-          placeholder="Type your message..."
-          class="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
-        />
+      <!-- Products List: horizontal scroll with arrow buttons -->
+      <div class="relative">
+        <!-- Left scroll button -->
         <button
-          (click)="sendMessage()"
-          class="w-10 h-10 bg-black text-white rounded-lg hover:bg-gray-800 transition-all flex items-center justify-center flex-shrink-0"
+          type="button"
+          (click)="scrollLeft()"
+          class="hidden md:flex items-center justify-center absolute -left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white shadow-lg border border-gray-200 hover:bg-gray-50 z-10"
+          aria-label="Scroll left"
         >
-          <mat-icon class="w-4 h-4">send</mat-icon>
+          <mat-icon class="text-gray-700">chevron_left</mat-icon>
+        </button>
+
+        <!-- Horizontal scroll container -->
+        <div
+          #productScroller
+          class="flex gap-4 overflow-x-auto pb-4"
+        >
+          @for (product of getFilteredProducts(); track product.id) {
+            <app-product-card
+              [product]="product"
+              [imageUrl]="getProductImageUrl(product.id)"
+              [cartQuantity]="getCartQuantity(product.id, 0)"
+              [bulkOptions]="bulkOptions"
+              (addToCart)="handleAddToCart($event)"
+              (removeFromCart)="handleRemoveFromCart($event)"
+              (productClick)="handleProductClick(product.id)"
+            ></app-product-card>
+          }
+        </div>
+
+        <!-- Right scroll button -->
+        <button
+          type="button"
+          (click)="scrollRight()"
+          class="hidden md:flex items-center justify-center absolute -right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white shadow-lg border border-gray-200 hover:bg-gray-50 z-10"
+          aria-label="Scroll right"
+        >
+          <mat-icon class="text-gray-700">chevron_right</mat-icon>
         </button>
       </div>
-      <p class="text-xs text-gray-500 mt-2 text-center">
-        Press Enter to send
-      </p>
     </div>
   </div>
 }
+<!-- AI Chat banner fixed at bottom -->
 
+<app-ai-chat-banner></app-ai-chat-banner>
 

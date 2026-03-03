@@ -1,11 +1,12 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { NavigationComponent } from './components/navigation/navigation.component';
+import { AiChatBannerComponent } from './components/ai-chat-banner/ai-chat-banner';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, NavigationComponent],
+  imports: [RouterOutlet, NavigationComponent, AiChatBannerComponent],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

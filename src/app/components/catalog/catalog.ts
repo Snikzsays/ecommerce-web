@@ -2,16 +2,20 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { ProductsService } from '../../services/products.service';
 import { FigmaSyncService } from '../../services/figma-sync.service';
 import { ImageAssetsService } from '../../services/image-assets.service';
 import { Product, CartItem, NavigationStructure } from '../../models/store.model';
 import { ProductCardComponent } from '../product-card/product-card';
+import { AiChatBannerComponent } from '../ai-chat-banner/ai-chat-banner';
+import { ProductQuickViewDialogComponent, ProductQuickViewData } from '../product-quick-view/product-quick-view-dialog.component';
 
 @Component({
   selector: 'app-catalog',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule, ProductCardComponent],
+  imports: [CommonModule, FormsModule, MatIconModule, MatDialogModule, ProductCardComponent, AiChatBannerComponent],
   templateUrl: './catalog.html',
   styleUrl: './catalog.scss',
 })
@@ -33,11 +37,22 @@ export class CatalogComponent implements OnInit {
   products: Product[];
   cart: CartItem[] = [];
   scrollRefs: { [key: string]: HTMLDivElement | null } = {};
+  @ViewChild('productScroller') productScrollerRef?: ElementRef<HTMLDivElement>;
+  @ViewChild('teaScroller') teaScrollerRef?: ElementRef<HTMLDivElement>;
+  @ViewChild('coffeeScroller') coffeeScrollerRef?: ElementRef<HTMLDivElement>;
+  @ViewChild('instantMixesScroller') instantMixesScrollerRef?: ElementRef<HTMLDivElement>;
+  @ViewChild('specialtyScroller') specialtyScrollerRef?: ElementRef<HTMLDivElement>;
 
   storeName = "VU's Brew House";
   storeTagline = 'Premium Teas & Coffee • Mumbai';
 
-  constructor(private productsService: ProductsService, private figmaSyncService: FigmaSyncService, private imageAssetsService: ImageAssetsService) {
+  constructor(
+    private productsService: ProductsService,
+    private figmaSyncService: FigmaSyncService,
+    private imageAssetsService: ImageAssetsService,
+    private dialog: MatDialog,
+    private router: Router
+  ) {
     this.navigationStructure = this.productsService.NAVIGATION_STRUCTURE;
     this.products = this.productsService.PRODUCTS;
   }
@@ -98,8 +113,7 @@ export class CatalogComponent implements OnInit {
   }
 
   handleProductClick(productId: string): void {
-    console.log('Product clicked:', productId);
-    // Later: navigate to product detail page
+    this.router.navigate(['/product', productId]);
   }
 
   handleCartClick(): void {
@@ -181,22 +195,90 @@ export class CatalogComponent implements OnInit {
     return this.productsService.getProductImage(product);
   }
 
-  scrollLeft(subCategory: string): void {
-    const ref = this.scrollRefs[subCategory];
-    if (ref) {
-      ref.scrollBy({ left: -300, behavior: 'smooth' });
+  getTeaProducts(): Product[] {
+    return this.productsService.getProductsByCategory('tea');
+  }
+
+  getCoffeeProducts(): Product[] {
+    return this.productsService.getProductsByCategory('coffee');
+  }
+
+  getInstantMixProducts(): Product[] {
+    return this.productsService.getProductsByCategory('instant-mixes');
+  }
+
+  getSpecialtyProducts(): Product[] {
+    return this.productsService.getProductsByCategory('specialty');
+  }
+
+  scrollLeft(): void {
+    const container = this.productScrollerRef?.nativeElement;
+    if (container) {
+      container.scrollBy({ left: -300, behavior: 'smooth' });
     }
   }
 
-  scrollRight(subCategory: string): void {
-    const ref = this.scrollRefs[subCategory];
-    if (ref) {
-      ref.scrollBy({ left: 300, behavior: 'smooth' });
+  scrollRight(): void {
+    const container = this.productScrollerRef?.nativeElement;
+    if (container) {
+      container.scrollBy({ left: 300, behavior: 'smooth' });
     }
   }
 
-  setScrollRef(subCategory: string, ref: HTMLDivElement): void {
-    this.scrollRefs[subCategory] = ref;
+  scrollTeaLeft(): void {
+    const container = this.teaScrollerRef?.nativeElement;
+    if (container) {
+      container.scrollBy({ left: -300, behavior: 'smooth' });
+    }
+  }
+
+  scrollTeaRight(): void {
+    const container = this.teaScrollerRef?.nativeElement;
+    if (container) {
+      container.scrollBy({ left: 300, behavior: 'smooth' });
+    }
+  }
+
+  scrollCoffeeLeft(): void {
+    const container = this.coffeeScrollerRef?.nativeElement;
+    if (container) {
+      container.scrollBy({ left: -300, behavior: 'smooth' });
+    }
+  }
+
+  scrollCoffeeRight(): void {
+    const container = this.coffeeScrollerRef?.nativeElement;
+    if (container) {
+      container.scrollBy({ left: 300, behavior: 'smooth' });
+    }
+  }
+
+  scrollInstantMixesLeft(): void {
+    const container = this.instantMixesScrollerRef?.nativeElement;
+    if (container) {
+      container.scrollBy({ left: -300, behavior: 'smooth' });
+    }
+  }
+
+  scrollInstantMixesRight(): void {
+    const container = this.instantMixesScrollerRef?.nativeElement;
+    if (container) {
+      container.scrollBy({ left: 300, behavior: 'smooth' });
+    }
+  }
+
+  scrollSpecialtyLeft(): void {
+    const container = this.specialtyScrollerRef?.nativeElement;
+    if (container) {
+      container.scrollBy({ left: -300, behavior: 'smooth' });
+    }
+  }
+
+  scrollSpecialtyRight(): void {
+    const container = this.specialtyScrollerRef?.nativeElement;
+    if (container) {
+      container.scrollBy({ left: 300, behavior: 'smooth' });
+    }
   }
 
   getProductCountByCategory(categoryId: string): number {

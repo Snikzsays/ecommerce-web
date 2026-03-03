@@ -1,0 +1,22 @@
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.ai-chat-banner-root {
+  --ai-bg: var(--background);
+  --ai-input-bg: var(--input-background);
+  --ai-border: var(--border);
+  --ai-placeholder: #9ca3af;
+  --ai-icon-bg: var(--primary);
+  --ai-icon-color: var(--primary-foreground);
+  --ai-radius: 9999px;
+}
+
+.ai-chat-banner-root input::placeholder {
+  color: var(--ai-placeholder);
+}

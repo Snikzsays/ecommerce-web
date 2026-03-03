@@ -1,0 +1,140 @@
+<!-- Phone-width bottom container: center within max-w-md and stick to bottom -->
+<div class="fixed inset-x-0 bottom-0 z-[60] flex justify-center pointer-events-none">
+  <div class="w-full max-w-md mx-auto pointer-events-auto">
+    <!-- Expanded chat window (grows upward from above the input bar) -->
+    <div
+      *ngIf="isExpanded && hasMessages"
+      class="mb-2 bg-white shadow-2xl border border-amber-300 rounded-2xl overflow-hidden"
+      style="max-height: 360px;"
+    >
+      <!-- Chat Header -->
+      <div
+        class="bg-gradient-to-r from-[#F59E0B] via-[#FBBF24] to-[#FCD34D] text-gray-900 px-5 py-3 flex items-center justify-between shadow-md flex-shrink-0"
+      >
+        <div class="flex items-center gap-2">
+          <div class="bg-white rounded-full p-1 shadow-lg">
+            <mat-icon class="w-4 h-4 text-amber-600">smart_toy</mat-icon>
+          </div>
+          <div>
+            <h3 class="font-bold text-xs text-gray-900">VU's AI Assistant</h3>
+            <p class="text-[10px] text-amber-800">Always here to help</p>
+          </div>
+        </div>
+        <button
+          type="button"
+          (click)="minimize()"
+          class="p-2 hover:bg-white/30 rounded-lg transition-colors"
+          aria-label="Close chat"
+        >
+          <mat-icon class="w-4 h-4 text-gray-900">open_in_full</mat-icon>
+        </button>
+      </div>
+
+      <!-- Messages -->
+      <div class="overflow-y-auto p-4 space-y-3 bg-gray-50" style="max-height: 320px;">
+        <div
+          *ngFor="let msg of chatMessages"
+          [ngClass]="msg.sender === 'user' ? 'flex justify-end' : 'flex justify-start'"
+        >
+          <div
+            class="max-w-[80%] rounded-2xl px-4 py-2 shadow-md"
+            [ngClass]="msg.sender === 'user'
+              ? 'bg-gradient-to-r from-[#F59E0B] to-[#FBBF24] text-white'
+              : 'bg-white text-gray-900 border border-amber-200'"
+          >
+            <p class="text-sm">{{ msg.text }}</p>
+            <p
+              class="text-xs mt-1"
+              [ngClass]="msg.sender === 'user' ? 'text-amber-100' : 'text-gray-500'"
+            >
+              {{ msg.timestamp | date: 'shortTime':'':'en-IN' }}
+            </p>
+          </div>
+        </div>
+        <div #messagesEnd></div>
+      </div>
+    </div>
+
+    <!-- Chat input bar fixed at the very bottom of the viewport -->
+    <div class="ai-chat-banner-root pb-3">
+      <div class="px-3">
+        <div class="flex items-center gap-3">
+          <!-- AI Icon -->
+          <div
+            class="flex-shrink-0 rounded-full p-2 shadow-lg bg-gradient-to-r from-[#F59E0B] via-[#FACC15] to-[#F97316]"
+          >
+            <mat-icon class="w-4 h-4" style="color: var(--primary-foreground);">smart_toy</mat-icon>
+          </div>
+
+          <!-- Input shell -->
+          <div class="flex-1">
+            <div
+              class="relative w-full bg-white rounded-full border border-gray-100 shadow-[0_12px_40px_rgba(15,23,42,0.12)]"
+            >
+              <div
+                class="absolute left-3 top-1/2 -translate-y-1/2 flex items-center gap-2 pointer-events-none"
+              >
+                <mat-icon class="w-4 h-4 text-gray-400">search</mat-icon>
+              </div>
+              <input
+                #inputEl
+                type="text"
+                [ngModel]="message"
+                (ngModelChange)="message = $event"
+                (keydown)="handleKeyDown($event)"
+                (focus)="onInputFocus()"
+                placeholder="Ask VU's AI or Search"
+                class="w-full text-gray-900 rounded-full pl-10 pr-10 py-2.5 text-sm bg-transparent focus:outline-none"
+              />
+
+              <!-- Send button -->
+              <button
+                *ngIf="message.trim()"
+                type="button"
+                (click)="handleSendMessage()"
+                class="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-full hover:shadow-lg transition-all"
+                style="background: var(--primary); color: var(--primary-foreground);"
+              >
+                <mat-icon class="w-3.5 h-3.5">send</mat-icon>
+              </button>
+            </div>
+          </div>
+    </div>
+
+      <!-- Quick action chips -->
+      <div
+        *ngIf="!hasMessages"
+        class="flex gap-2 mt-2.5 overflow-x-auto pb-1 scrollbar-hide"
+      >
+        <button
+          type="button"
+          (click)="setQuickMessage('What are your best selling products?')"
+          class="flex-shrink-0 px-3 py-1.5 bg-gray-100 text-gray-700 rounded-full text-xs font-medium hover:bg-gray-200 transition-colors border border-gray-300"
+        >
+          Best Sellers
+        </button>
+        <button
+          type="button"
+          (click)="setQuickMessage('Tell me about bulk pricing')"
+          class="flex-shrink-0 px-3 py-1.5 bg-gray-100 text-gray-700 rounded-full text-xs font-medium hover:bg-gray-200 transition-colors border border-gray-300"
+        >
+          Bulk Orders
+        </button>
+        <button
+          type="button"
+          (click)="setQuickMessage('What are delivery charges?')"
+          class="flex-shrink-0 px-3 py-1.5 bg-gray-100 text-gray-700 rounded-full text-xs font-medium hover:bg-gray-200 transition-colors border border-gray-300"
+        >
+          Delivery Info
+        </button>
+        <button
+          type="button"
+          (click)="setQuickMessage('Show me premium teas')"
+          class="flex-shrink-0 px-3 py-1.5 bg-gray-100 text-gray-700 rounded-full text-xs font-medium hover:bg-gray-200 transition-colors border border-gray-300"
+        >
+          Premium Range
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
